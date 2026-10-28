@@ -8,7 +8,8 @@ export class PIMPage {
     readonly middleNameInput: Locator;
     readonly lastNameInput: Locator;
     readonly saveButton: Locator;
-    readonly nameText: Locator;
+    readonly firstNameText: Locator;
+    readonly lastNameText: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -17,7 +18,8 @@ export class PIMPage {
         this.middleNameInput = page.getByPlaceholder('Middle Name');
         this.lastNameInput = page.getByPlaceholder('Last Name');
         this.saveButton = page.getByRole('button', { name: 'Save' });
-        this.nameText = page.locator('div.orangehrm-edit-employee-name')
+        this.firstNameText = page.getByRole('textbox', { name: 'First Name' });
+        this.lastNameText = page.getByRole('textbox', { name: 'Last Name' });
     }
 
     async createNewEmployee(firstnmae: string, middlename: string, lastname: string) {

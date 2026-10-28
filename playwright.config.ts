@@ -1,12 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+import path from 'path';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -38,42 +34,39 @@ export default defineConfig({
     // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure'
 
   },
 
   /* Configure projects for major browsers */
-  projects: [{
-    name: "Setup",
-    testMatch: "**/global.setup.ts"
-  },
-  {
-    name: 'chromium',
-    dependencies: ['Setup'],
-    use: {
-      ...devices['Desktop Chrome'],
-      storageState: '../../playwright/.auth/auth.json',
-    },
-  },
+  projects: [
+    {
+      name: 'chromium',
 
-  {
-    name: 'firefox',
-    dependencies: ['Setup'],
-    use: {
-      ...devices['Desktop Firefox'],
-      storageState: '../../playwright/.auth/auth.json',
-    },
-  },
+      use: {
+        ...devices['Desktop Chrome'],
 
-  {
-    name: 'webkit',
-    dependencies: ['Setup'],
-    use: {
-      ...devices['Desktop Safari'],
-      storageState: '../../playwright/.auth/auth.json',
+      },
     },
-  },
+
+    {
+      name: 'firefox',
+
+      use: {
+        ...devices['Desktop Firefox'],
+
+      },
+    },
+
+    {
+      name: 'webkit',
+
+      use: {
+        ...devices['Desktop Safari'],
+
+      },
+    },
 
     /* Test against mobile viewports. */
     // {

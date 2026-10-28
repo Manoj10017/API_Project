@@ -11,6 +11,7 @@ test("Login with valid credentials", { tag: ['@sanity', '@regression', '@web'] }
     await page.waitForURL(`${process.env.BASE_URL_WEB}/web/index.php/dashboard/index`);
     await expect(page).toHaveURL(`${process.env.BASE_URL_WEB}/web/index.php/dashboard/index`);
     await expect(dashboard.dashboadrtText).toHaveText('Dashboard');
+    page.context().storageState({path:'./storage_data/data.json'});
 
 
 

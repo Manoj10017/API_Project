@@ -18,7 +18,7 @@ export class LoginPage {
      * @param url 
      */
     async navigateToUrl(url: string) {
-        this.page.goto(url);
+        await this.page.goto(url);
     }
     /**
      * Filling the username and password navigate to the dashboard page.
