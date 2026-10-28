@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       test_type:
-        description: 'Choose test suite'
+        description: Choose test suite
         required: true
         type: choice
         options:
@@ -15,9 +15,8 @@ on:
           - web
           - all
         default: all
-
       browser:
-        description: 'Choose browser'
+        description: Choose browser
         required: true
         type: choice
         options:
@@ -25,9 +24,8 @@ on:
           - firefox
           - webkit
         default: chromium
-
       headed:
-        description: 'Run browser in headed mode'
+        description: Run browser in headed mode
         required: true
         type: boolean
         default: false
@@ -57,47 +55,59 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install
 
       - name: Run selected Playwright tests
+        shell: pwsh
         env:
           TEST_TYPE: ${{ inputs.test_type || 'all' }}
           BROWSER: ${{ inputs.browser || 'chromium' }}
-          HEADED: ${{ inputs.headed }}
-        shell: bash
+          HEADED: ${{ inputs.headed || false }}
         run: |
-          ARGS=()
+          $argsList = @()
 
-          case "$TEST_TYPE" in
-            sanity)
-              ARGS+=(--grep "@sanity")
-              ;;
-            regression)
-              ARGS+=(--grep "@regression")
-              ;;
-            API)
-              ARGS+=(--grep "@API")
-              ;;
-            web)
-              ARGS+=(--grep "@web")
-              ;;
-            all)
-              ;;
-            *)
-              echo "Invalid test type: $TEST_TYPE"
-              exit 1
-              ;;
-          esac
+          switch ($env:TEST_TYPE) {
+            'sanity'     { $argsList += @('--grep', '@sanity') }
+            'regression' { $argsList += @('--grep', '@regression') }
+            'API'        { $argsList += @('--grep', '@API') }
+            'web'        { $argsList += @('--grep', '@web') }
+            'all'        { }
+            default      { throw "Invalid test type: $env:TEST_TYPE" }
+          }
 
-          # API tests may not require a browser project.
-          if [[ "$TEST_TYPE" != "API" ]]; then
-            ARGS+=(--project="$BROWSER")
-            if [[ "$HEADED" == "true" ]]; then
-              ARGS+=(--headed)
-            fi
-          fi
+          if ($env:TEST_TYPE -ne 'API') {
+            $argsList += @('--project', $env:BROWSER)
 
-          npx playwright test "${ARGS[@]}"
+            if ($env:HEADED -eq 'true') {
+              $argsList += '--headed'
+            }
+          }
+
+          npx playwright test @argsList
+
+          if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+          }
+
+      - name: Generate Allure HTML report
+        if: ${{ !cancelled() }}
+        shell: pwsh
+        run: |
+          if (!(Test-Path "allure-results")) {
+            Write-Error "allure-results folder not found. Check your Playwright reporter configuration."
+            exit 1
+          }
+
+          npx allure generate allure-results --clean -o allure-report
+
+          if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+          }
+
+          if (!(Test-Path "allure-report/index.html")) {
+            Write-Error "Allure HTML report was not generated."
+            exit 1
+          }
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
@@ -108,7 +118,16 @@ jobs:
           retention-days: 30
           if-no-files-found: ignore
 
-      - name: Upload Allure results
+      - name: Upload Allure HTML report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report/
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Upload raw Allure results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
