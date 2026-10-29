@@ -75,12 +75,10 @@ jobs:
             default      { throw "Invalid test type: $env:TEST_TYPE" }
           }
 
-          if ($env:TEST_TYPE -ne 'API') {
-            $argsList += @('--project', $env:BROWSER)
+          $argsList += @('--project', $env:BROWSER)
 
-            if ($env:HEADED -eq 'true') {
-              $argsList += '--headed'
-            }
+          if ($env:HEADED -eq 'true') {
+            $argsList += '--headed'
           }
 
           npx playwright test @argsList
