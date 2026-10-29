@@ -2,7 +2,9 @@ import { expect, test } from '../../fixtures/pom-fixtures'
 import { LoginPage } from '../../pages/LoginPage';
 import { LeftNavigationPage } from '../../pages/LeftNavigationPage';
 import { PIMPage } from '../../pages/PIMPage';
-import data from "../../test-Data/orane-hrm.json"
+import data from "../../test-Data/orane-hrm.json";
+import dotenv from 'dotenv';
+dotenv.config();
 
 test('Employee creation', async ({ browser }) => {
    const context = await browser.newContext({ storageState: './storage_data/data.json' });
