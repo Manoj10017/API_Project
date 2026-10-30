@@ -1,16 +1,19 @@
 import { test, expect } from '@playwright/test';
 
 test("Practice of while loop", () => {
+    let arr: number[] = [10, 20, 30, 40];
 
-  let add=(num1:number,num2:number):number=>{
-    return num1+num2;
-  }
+    function findElement(arr1: number[], ele: number) {
+        for (let i = 1; i < arr1.length; i++) {
+            if(arr1[1]===ele){
+                console.log(`Element is found in the array :${arr1[i]}`);
+                break;
+            }
 
+        }
 
- let result= add(10,20);
- console.log("Result is :", result);
+    }
+    findElement(arr,20);
 
-  let result2= add(100,200);
- console.log("Result is :", result2);
 
 })
