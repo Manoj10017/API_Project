@@ -1,4 +1,4 @@
-import { expect, test } from '../../fixtures/pom-fixtures'
+import { expect, test } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
 import { LeftNavigationPage } from '../../pages/LeftNavigationPage';
 import { PIMPage } from '../../pages/PIMPage';
@@ -6,12 +6,19 @@ import data from "../../test-Data/orane-hrm.json";
 import dotenv from 'dotenv';
 dotenv.config();
 
-test('Employee creation', async ({ browser }) => {
-   const context = await browser.newContext({ storageState: './storage_data/data.json' });
-   const page = await context.newPage();
+test('Employee creation', async ({ page }) => {
+   const baseUrl = process.env.BASE_URL_WEB;
+   const username = process.env.USER_NAME;
+   const password = process.env.PASSWORD;
+
+   if (!baseUrl || !username || !password) {
+      throw new Error('BASE_URL_WEB, USER_NAME, and PASSWORD must be configured to run the employee creation test.');
+   }
+
    const loginpage = new LoginPage(page);
-   await loginpage.navigateToUrl(`${process.env.BASE_URL_WEB}/web/index.php/auth/login`);
-   //await loginpage.login(process.env.USER_NAME!, process.env.PASSWORD!);
+   await loginpage.navigateToUrl(`${baseUrl}/web/index.php/auth/login`);
+   await loginpage.login(username, password);
+   await page.waitForURL(`${baseUrl}/web/index.php/dashboard/index`);
 
    const leftNavigation = new LeftNavigationPage(page);
    await leftNavigation.pimLink.click();
