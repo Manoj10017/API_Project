@@ -17,11 +17,17 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { browserName: 'chromium' }
+      use: {
+        browserName: 'chromium',
+        viewport: null,
+        launchOptions: {
+          args: ['--start-maximized']
+        }
+      }
     },
     {
       name: 'firefox',
-      use: { browserName: 'firefox' }
+      use: { browserName: 'firefox', viewport: null }
     },
     {
       name: 'webkit',
