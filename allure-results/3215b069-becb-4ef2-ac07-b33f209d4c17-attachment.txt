@@ -1,0 +1,8 @@
+{
+  firstname: 'Rick',
+  lastname: 'van den Berg',
+  totalprice: 196,
+  depositpaid: false,
+  bookingdates: { checkin: '2026-11-03', checkout: '2026-11-06' },
+  additionalneeds: 'Breakfast'
+}

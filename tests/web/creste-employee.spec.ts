@@ -6,7 +6,7 @@ import data from "../../test-Data/orane-hrm.json";
 import dotenv from 'dotenv';
 dotenv.config();
 
-test('Employee creation', async ({ page }) => {
+test('Employee creation', { tag: ['@web'] }, async ({ page }) => {
    const baseUrl = process.env.BASE_URL_WEB;
    const username = process.env.USER_NAME;
    const password = process.env.PASSWORD;

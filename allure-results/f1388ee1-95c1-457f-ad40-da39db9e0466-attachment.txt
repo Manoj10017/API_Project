@@ -1,0 +1,27 @@
+Created booking ID: 557
+Booking details using the GET request is : {
+  firstname: 'Chloe',
+  lastname: 'Leuschke',
+  totalprice: 496,
+  depositpaid: false,
+  bookingdates: { checkin: '2026-11-03', checkout: '2026-11-08' },
+  additionalneeds: 'Breakfast'
+}
+Created token id : f5471e56c5da6b9
+Partial update response is : {
+  firstname: 'Marcelle',
+  lastname: 'Homenick',
+  totalprice: 496,
+  depositpaid: false,
+  bookingdates: { checkin: '2026-11-03', checkout: '2026-11-08' },
+  additionalneeds: 'Breakfast'
+}
+Full update data: {
+  firstname: 'Miller',
+  lastname: 'Purdy',
+  totalprice: 996,
+  depositpaid: true,
+  bookingdates: { checkin: '2026-11-03', checkout: '2026-11-08' },
+  additionalneeds: 'Breakfast'
+}
+Booking is succeessfully deleted
